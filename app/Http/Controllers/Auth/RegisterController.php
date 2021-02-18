@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Setting;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -28,7 +30,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/user-home';
 
     /**
      * Create a new controller instance.
@@ -49,9 +51,10 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'name' => ['required', 'string', 'max:255'],
+            'sign_username' => 'required|string|max:100|unique:users,username',
+            'sign_email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'sign_password' => ['required', 'string', 'min:6'],
         ]);
     }
 
@@ -63,10 +66,37 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+        $setting = Setting::latest()->first();
+        $ref = Session::get('ref');
+        if($ref) {
+            $ref = substr($ref,5);
+        }
+        $user = User::create([
+            'name' => $data['sign_username'],
+            'username' => $data['sign_username'],
+            'email' => $data['sign_email'],
+            'password' => Hash::make($data['sign_password']),
+            'mobile' => $data['mobile'],
+            'credit_balance' => $setting->sign_up_credit,
+            'singUp_credit' => $setting->sign_up_credit,
+            'referral_id' => $ref ? $ref : null
         ]);
+        if($ref) {
+            $referUser = User::find($ref);
+            $countOfReferral = User::whereReferral_id($ref)->count();
+            if($countOfReferral < 20) {
+                $referUser->update([
+                    'credit_balance' => ($referUser->credit_balance + $setting->referral_get_credit),
+                    'referral_credit' => ($referUser->referral_credit + $setting->referral_get_credit)
+                ]);
+            }
+            Session::forget('ref');
+        }
+        $mailData = [
+            'name' => $data['sign_username'],
+        ];
+        $this->sendEmail('email.email-welcome',$mailData ,'Welcome to BillboardBd', $data['sign_email']);
+        return  $user;
+
     }
 }
