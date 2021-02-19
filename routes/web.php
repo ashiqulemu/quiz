@@ -7,7 +7,6 @@ use Illuminate\Contracts\Session\Session;
    
     Route::middleware(['auth'])->group(function () {
 
-      
         Route::get('/quiz-home', 'UserHomeController@quizhome');
         Route::get('/next-quiz', 'UserHomeController@nextquizhome');
         Route::get('/quiz-edit', 'QuizTestController@quizedit');
@@ -23,7 +22,6 @@ use Illuminate\Contracts\Session\Session;
         Route::post('/quiz-user-details/update-password', 'UserHomeController@qupdatePassword');
         
 
-
         Route::post('/quiz-answer', 'QuizTestController@registeredQuiz');
         Route::post('/next-quiz-answer', 'QuizTestController@nextregisteredQuiz');
         Route::get('/quiz-result', 'PrizeController@userResult');
@@ -33,8 +31,6 @@ use Illuminate\Contracts\Session\Session;
     Route::get('/how-it-works', function () {
         return view('site.pages.partials.how-it-works');
     });
-
-    
 
     Route::get('/privacy-policy', function () {
         return view('site.conditions.privacy-policy');
@@ -59,9 +55,6 @@ use Illuminate\Contracts\Session\Session;
         return view('site.login.login-partitial.forget-password');
     });
 
-
-
-
     Route::get('/quiz-test','QuizTestController@test' )->name('quiz.test');
     Route::get('/quiz-login','QuizTestController@log');
     Route::post('/quiz-login','QuizTestController@quizlog' );
@@ -72,7 +65,6 @@ use Illuminate\Contracts\Session\Session;
     Route::post('/next-quiz-register','QuizTestController@nextquizregister' );
     Route::post('/header/fblogin','QuizTestController@headerfblogin' );
 
-
     Route::get('/', 'HomeDataController@land');
     Route::get('/quiz-start', 'HomeDataController@quizland');
     Route::get('/quiz-next', 'HomeDataController@next');
@@ -80,4 +72,3 @@ use Illuminate\Contracts\Session\Session;
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
