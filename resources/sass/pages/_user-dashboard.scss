@@ -1,0 +1,56 @@
+@import '../helpers/variables';
+
+.dashboard-btns {
+    display: flex;
+    flex-wrap: wrap;
+    > a {
+        margin: 5px;
+    }
+}
+
+.accordion {
+    background: $light-grey;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.category-header {
+    color: $white;
+    text-transform: capitalize;
+    font-weight: 700;
+    font-size: 1.9rem;
+    cursor: pointer;
+    padding: 10px;
+    text-shadow: 1.5px 1.5px 1px #222;
+}
+
+.category-icon {
+    width: 24px;
+}
+
+.quiz-list-item {
+    background: lighten($dark-blue, 10%);
+    color: $white;
+    font-family: $font-family-base;
+    padding: 10px 20px;
+    font-size: 1.8rem;
+    border-bottom: 1px solid $light-grey;
+    display: flex;
+    justify-content: space-between;
+    div:nth-child(1) {
+        width: 80%;
+    }
+    div:nth-child(2),
+    div:nth-child(3) {
+        min-width: 50px;
+        text-align: center;
+    }
+    a {
+        color: $white;
+    }
+}
+
+.quiz-list-header {
+    background: $dark-blue;
+    font-weight: 700;
+}

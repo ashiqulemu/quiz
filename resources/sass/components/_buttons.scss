@@ -1,0 +1,37 @@
+@import '../helpers/variables';
+.btn {
+    color: $white;
+    border: none;
+}
+
+.btn-primary {
+    background: $light-blue;
+    &:hover {
+        background: lighten($light-blue, 10%);
+        color: $white;
+    }
+}
+
+.btn-secondary {
+    background: $dark-purple;
+    &:hover {
+        background: lighten($dark-purple, 10%);
+        color: $white;
+    }
+}
+
+.btn-logout {
+    background: $pink;
+    &:hover {
+        background: lighten($pink, 10%);
+        color: $white;
+    }
+}
+
+.btn-link {
+    color: $dark-purple;
+    &:hover {
+        color: lighten($dark-purple, 20%);
+        text-decoration: none;
+    }
+}
