@@ -19,7 +19,7 @@ class UserTableSeed extends Seeder
             'email'=>'admin@admin.com',
             'username'=>'admin',
             'role'=>'admin',
-            'credit_balance'=>0,
+            'credit_balance'=>5000,
             'password'=>bcrypt(123123),
         ]);
         foreach (range(1,15) as $index){
@@ -28,10 +28,14 @@ class UserTableSeed extends Seeder
                 'email'=>$faker->email,
                 'username'=>'user'.$index,
                 'role'=>'user',
-                'credit_balance'=>0,
+                'credit_balance'=>$faker->numberBetween(2000,10000),
                 'password'=>bcrypt(123123),
             ]);
         }
-       
+        \App\Setting::create([
+            'amount_sign' => '',
+            'sign_up_credit' => 10,
+            'referral_get_credit' => 10,
+        ]);
     }
 }

@@ -78,10 +78,19 @@
                             <div class="col-xs-3">
                                 <i class="text-warning fa fa-support fa-5x"></i>
                             </div>
-                            
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{$totalUpComingAuctions}}</div>
+                                <div>Upcoming Auction</div>
+                            </div>
                         </div>
                     </div>
-                   
+                    <a href="{{url('/admin/auction')}}">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>

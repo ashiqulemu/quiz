@@ -12,8 +12,12 @@
 */
 
 $app = new Illuminate\Foundation\Application(
-    realpath(__DIR__.'/../')
+    $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
+
+//if (env('APP_DEBUG')) {
+//    $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
+//}
 
 /*
 |--------------------------------------------------------------------------

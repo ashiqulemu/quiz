@@ -8,4 +8,3 @@ class Prize extends Model
 {
     protected $fillable = ['id','score','gift'];
 }
-

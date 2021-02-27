@@ -25,11 +25,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" style="overflow: hidden;" href="{{url('/admin/dashboard')}}">
-            <img src="/images/logo.jpg" alt="" class="brand-logo" >
+        <a class="navbar-brand" href="{{url('/admin/dashboard')}}">
+            <img src="/images/logo.jpg" alt="" class="brand-logo">
         </a>
     </div>
     <!-- /.navbar-header -->
+
 
     <ul class="nav navbar-top-links navbar-right">
         <!-- /.dropdown -->
@@ -59,13 +60,7 @@
         </li>
         <!-- /.dropdown -->
     </ul>
-    <a class="btn btn-sm btn-warning" style="transform: translate(10px, 10px);" href="{{url('/')}}" style="color: #ff9a05">Visit Site</a>
+    <a class="site-link" href="{{url('/')}}" style="color: #ff9a05">Visit Site</a>
+    <!-- /.navbar-top-links -->
     @include('admin.includes.side-bar')
 </nav>
-
-<style>
-    .brand-logo{
-        width: 250px;
-    }
-
-</style>

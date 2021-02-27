@@ -12,7 +12,7 @@
                 </div>
 
                 <div class="col-lg-5">
-                    
+                    @if(!($uri === 'forget-password' || strpos($uri, 'password/reset')))
                         <form method="POST" action="{{ url('/admin/login') }}" class="form-inline">
                             @csrf
                             <div class="authPanel" id="login-area">
@@ -87,7 +87,7 @@
 
                         </form>
 
-                
+                    @endif()
                 </div>
 
                 <div class="col-lg-3">

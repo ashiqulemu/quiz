@@ -77,19 +77,17 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-       
         if(!$user->is_active){
             Auth::logout();
             return redirect('/');
         }
         if(($user->role === 'admin' || $user->role === 'sub-admin') && $request->input('from') == 'ad'){
-           
             return redirect('/admin/dashboard');
 
 
         }else if($user->role === 'user' && $request->input('from') == 'st'){
             Cart::merge(auth()->user()->id);
-            return redirect('/home');
+            return redirect('/user-home');
 
         }else if($user->role === 'user' && $request->input('from') == 'quiz') {
 
@@ -117,14 +115,7 @@ class LoginController extends Controller
 
     }
 
-    public function cartStore() {
-        if(auth()->user()->id){
-            $this->eraseCartItem(auth()->user()->id);
-            if(Cart::content()->count()){
-                Cart::store(auth()->user()->id);
-            }
-        }
-    }
+  
 
     public function redirect()
     {

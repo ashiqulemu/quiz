@@ -3,27 +3,62 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Illuminate\Database\Eloquent\Builder;
 class User extends Authenticatable
 {
     use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'username','mobile', 'news_letter' , 'is_active', 'role', 'credit_balance', 'referral_id', 'referral_credit', 'singUp_credit'
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    public function bid(){
+        return $this->has(Bid::class);
+    }
+    public function autoBid(){
+        return $this->has(AutoBid::class);
+    }
+    public function contact(){
+        return $this->hasOne(Contact::class);
+    }
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope('withContact', function (Builder $builder) {
+            $builder->with(['contact']);
+        });
+    }
+    public function quizzes()
+    {
+        return $this->hasMany(quiz::class);
+    }
+
+    public function scores()
+    {
+        return $this->hasMany(Score::class);
+    }
+
+    public function publish(quiz $quiz)
+    {
+        return $this->quizzes()->save($quiz);
+    }
+
+    public function saveScore(Score $score)
+    {
+        return $this->scores()->save($score);
+    }
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
 }

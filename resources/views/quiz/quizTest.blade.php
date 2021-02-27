@@ -1,5 +1,5 @@
-<section>
 
+<section>
     <div class="quiz">
 
         @if(!empty($msg))
@@ -17,14 +17,14 @@
 
 
                     <br>
-                    {{--<div class="quizHeader">--}}
+                    <div class="quizHeader">
                         {{--@foreach($quizHead as $head)--}}
                             {{--<h2>{{$head->first_header}}</h2>--}}
                             {{--<h5 style="color: #2078c7 ">{{$head->second_header}}</h5>--}}
                         {{--@endforeach--}}
 
-                        {{--<h4>Result Declare After &nbsp; &nbsp;<i class="fa fa-check"></i> {{ date('d-M-yy H:m', strtotime($quiz[0]->expiry_date)) }}</h4>--}}
-                    {{--</div>--}}
+                        <h4>Result Declare After &nbsp; &nbsp;<i class="fa fa-check"></i> {{ date('d-M-yy H:m', strtotime($quiz[0]->expiry_date)) }}</h4>
+                    </div>
                     <form action="{{url('/quiz-save')}}" method="post" >
                         @csrf
 
@@ -91,7 +91,7 @@
     </div>
 
 </section>
-<!--
+
 {{--<script>--}}
 
 
@@ -161,4 +161,4 @@
         {{--})--}}
     {{--}--}}
 
-{{--</script>--}} -->
+{{--</script>--}}

@@ -2,15 +2,16 @@
 Route::middleware(['init'])->group(function () {
 Auth::routes();
 Route::middleware(['checkLogin'])->group(function () {
-    Route::get('login', 'AdminAuthController@login');
+   
 });
 Route::middleware(['adminAuth'])->group(function () {
     Route::get('/dashboard', 'AdminDashboardController@dashboard');
-    
+   
     Route::resource('cms','CmsController');
-    Route::resource('setting','SettingController');
+  
     Route::get('/change-password','AdminAuthController@changePassword');
     Route::post('/update-password','AdminAuthController@UpdatePassword');
+
 
     Route::get('/quiz', 'AdminDashboardController@quizindex');
     Route::post('/create-quiz', 'QuizController@create')->name('quiz.create');
@@ -31,7 +32,11 @@ Route::middleware(['adminAuth'])->group(function () {
 
     Route::get('/publish-result/{id}', 'PrizeController@publishresult')->name('publish.result');
     Route::resource('quizhead','QuizheadController');
-    
+    Route::get('/withdraw-request', 'WithdrawlController@adminwithdrawl');
+   
+    Route::get('/fb-video', 'FbvideoController@index');
+    Route::post('/savefb-video', 'FbvideoController@store');
+    Route::get('/showfb-video', 'FbvideoController@show');
     Route::get('/publish/{id}', 'FbvideoController@publish');
 
     Route::delete('/video-delete/{id}', 'FbvideoController@destroy');
@@ -39,3 +44,4 @@ Route::middleware(['adminAuth'])->group(function () {
 
 });
 
+Route::get('login', 'AdminAuthController@login');

@@ -2,26 +2,21 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
+use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
-class Authenticate
+class Authenticate extends Middleware
 {
     /**
-     * Handle an incoming request.
+     * Get the path the user should be redirected to when they are not authenticated.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @return string
      */
-    public function handle($request, Closure $next)
-    {
-        return $next($request);
-    }
     protected function redirectTo($request)
     {
 
         if (! auth()->user()) {
-            return route('/');
+            return route('mainHome');
         }
     }
 }
