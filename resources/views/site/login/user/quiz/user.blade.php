@@ -11,7 +11,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>Galaxy Games</h2>
+                    <h2>My Informartion</h2>
                     <hr>
                 </div>
                 <div class="col-lg-3">

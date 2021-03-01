@@ -24,7 +24,7 @@
                         <table class="table-striped table">
                             <tr>
                                 <td>Referral url</td>
-                                <td>http://www.galaxy.games/?ref=20100{{auth()->user()->id}}</td>
+                                <td>http://www.rupkotha.com/?ref=20100{{auth()->user()->id}}</td>
                             </tr>
                             <tr>
                                 <td> Referred User</td>

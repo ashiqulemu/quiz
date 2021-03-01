@@ -72,7 +72,7 @@
     @endif
 
     @yield('content')
-    @include('site.home-partials.footer')
+   
 
 </div>
 

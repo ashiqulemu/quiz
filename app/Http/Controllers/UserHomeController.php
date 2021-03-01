@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Auction;
-use App\AutoBid;
-use App\Bid;
+
 use App\Contact;
 use App\Http\Traits\Districts;
-use App\Payment;
-use App\Product;
-use App\Sales;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -28,48 +23,47 @@ class UserHomeController extends Controller
     public function index()
     {
         if(!auth()->user()){
-            return redirect('/login');
+            return redirect('/');
         }
-        $auctionList = Auction::with('product.category', 'medias', 'slots', 'bids.user')
-            ->whereStatus('Active')
-            ->whereIsClosed(0)
-            ->where('up_time', '<=', Carbon::now()->format('Y-m-d H:i:s'))
-            ->latest()->get();
+        
 
-        $productList = Product::with('category', 'medias')
-            ->whereStatus(1)
-            ->where('quantity','>', 0)
-            ->latest()
-            ->take(15)
+        $quiz=DB::table('quizzes')
+        ->select('*')
+        ->where('status',1)
+        ->where('expiry_date','>=',date("Y/m/d"))
+        ->where('quiz_type','Commercial')
+        ->first();
+
+      
+    if(sizeof($quiz)>0)
+    {
+
+        $question = DB::table('questions')
+            ->select('*')
+            ->where('quiz_id', $quiz->id)
             ->get();
-        $closedAuctions = Auction::with('product.category', 'medias')
-            ->whereIsClosed(1)
-            ->latest()
-            ->take(10)
-            ->get();
 
-        $upCommingAuction = Auction::with('product.category', 'medias')
-            ->whereStatus('Active')
-            ->whereIsClosed(0)
-            ->where('up_time', '>', Carbon::now()->format('Y-m-d H:i:s'))
-            ->latest()
-            ->get();
-        $id = auth()->user()->id;
+         $commercialQuiz=DB::table('quizzes')
+         ->select('*')
+         ->where('quiz_type', 'Commercial')
+         ->where('expiry_date','>=',date('Y-m-d H:i'))
+         ->where('id','!=',$quiz->id)
+         ->get();
+         
+         $freeQuiz=DB::table('quizzes')
+         ->select('*')
+         ->where('quiz_type', 'Free')
+         ->where('expiry_date','>=',date('Y-m-d H:i'))
+         ->get();
+         
+         $countAttend=DB::table('quiz_takens')
+         ->select('id')
+         ->where('quiz_id', $quiz->id)
+         ->count();
 
-        $countPost=FacebookShare :: where('user_id',$id  )
-            ->whereDate('created_at', '>=', date('Y-m-d'))
-            ->count();
-
-
-        return view('site.login.index', [
-            'auctionList'       => $auctionList,
-            'productList'       => $productList,
-            'closedAuctions'    => $closedAuctions,
-            'upCommingAuction'  => $upCommingAuction,
-            'countPost'         => $countPost,
-
-        ]);
-
+         return view('site.pages.loggedin', ['quiz' => $quiz, 'question' => $question,'commercialQuiz'=>$commercialQuiz,'freeQuiz'=>$freeQuiz,'countAttend'=>$countAttend]);
+            
+    }
     }
 
     public function updateInfo(Request $request)
@@ -280,53 +274,7 @@ class UserHomeController extends Controller
     {
         return view('site.login.user.quiz.change-password');
     }
-    public function allOrder()
-    {
-        $orders = Sales::with('items')->whereUserId(auth()->user()->id)
-            ->orderBy('id', 'DESC')
-            ->paginate(20);
-        return view('site.login.user.partial.all-order', [
-            'orders' => $orders
-        ]);
-    }
-    public function shipmentOrder()
-    {
-        $orders = Sales::with('items')->whereUserId(auth()->user()->id)
-            ->whereOrderStatus('Shipped')
-            ->orderBy('id', 'DESC')
-            ->paginate(20);
-        return view('site.login.user.partial.shipment-order', [
-            'orders' => $orders
-        ]);
-    }
-    public function completedOrder()
-    {
-        $orders = Sales::with('items')->whereUserId(auth()->user()->id)
-            ->whereOrderStatus('Delivered')
-            ->orderBy('id', 'DESC')
-            ->paginate(20);
-        return view('site.login.user.partial.completed-order', [
-            'orders' => $orders
-        ]);
-    }
-    public function cancelOrder()
-    {
-        $orders = Sales::with('items')->whereUserId(auth()->user()->id)
-            ->whereOrderStatus('cancel')
-            ->orderBy('id', 'DESC')
-            ->paginate(20);
-        return view('site.login.user.partial.cancel-order', [
-            'orders' => $orders
-        ]);
-    }
-    public function biddingHistory()
-    {
-        $bids = Bid::with('auction')
-            ->whereUserId(auth()->user()->id)
-            ->orderBy('id','DESC')
-            ->paginate(20);
-        return view('site.login.user.partial.history', ['bids' => $bids]);
-    }
+    
     public function creditBuyingHistory()
     {
         $creditHistory = Payment::wherePaymentableType('App\Package')
@@ -336,19 +284,7 @@ class UserHomeController extends Controller
         return view('site.login.user.partial.credit-buying-history',['creditHistory' => $creditHistory]);
     }
 
-    public function orderCancel($order_no) {
-        $sales = Sales::whereOrderNo($order_no)->get();
-        if($checkAccessResutl =  $this->checkAccessOfUser($sales[0]->user_id, $sales[0]->order_status)) return $checkAccessResutl;
-        foreach ($sales as $sale) {
-            $sale->update(['order_status' => 'cancel']);
-        }
-        return redirect()->back()->with([
-            'type' => 'success',
-            'message' => 'Your order canceled successfully.'
-        ]);
-
-    }
-
+   
     public function checkAccessOfUser($userId , $status) {
 
         if($userId != auth()->user()->id) {

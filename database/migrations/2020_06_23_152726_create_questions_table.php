@@ -19,6 +19,8 @@ class CreateQuestionsTable extends Migration
             $table->string('question');
             $table->string('option1');
             $table->string('option2');
+            $table->string('option3')->nullable();
+            $table->string('option4')->nullable();
             $table->integer('quiz_id');
             $table->timestamps();
         });

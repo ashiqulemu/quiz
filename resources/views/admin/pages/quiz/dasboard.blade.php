@@ -36,11 +36,11 @@
                                     <select class="js-example-basic-multiple form-control"
                                             name="quiz_type" id="select1">
                                         <option value="">Select Quiz Type</option>
-                                        <option value="First"
-                                        @if (old('quiz_type') == 'First') {{ 'selected' }} @endif>First</option>
+                                        <option value="Commercial"
+                                        @if (old('quiz_type') == 'Commercial') {{ 'selected' }} @endif>Commercial</option>
 
-                                        <option value="Next"
-                                        @if (old('quiz_type') == 'Next') {{ 'selected' }} @endif>Next</option>
+                                        <option value="Free"
+                                        @if (old('quiz_type') == 'Free') {{ 'selected' }} @endif>Free</option>
 
                                     </select>
                                 </div>

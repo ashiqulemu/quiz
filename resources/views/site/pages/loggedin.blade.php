@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Quiz</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <link rel="stylesheet" href="{{mix('css/app.css')}}">
     <link rel="icon" href="{{asset('images/favi.png')}}">
@@ -12,106 +12,49 @@
 
 <body>
     <div class="container-fluid bg-white mb-3">
-        <nav class="navbar navbar-expand-md ">
-            <a class="navbar-brand" href="#">
-                <img width='120px' src="https://img.freepik.com/free-vector/quiz-comic-pop-art-style_175838-505.jpg?size=626&ext=jpg" alt="">
+    <section class="loged-header" >
+    <div class="container">
+        <div class="header">
+            <div>
+                <div class="brand">
+                    <a href="#">
+                    <img width='120px' src="https://img.freepik.com/free-vector/quiz-comic-pop-art-style_175838-505.jpg?size=626&ext=jpg" alt="">
             </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-      
-            <div class="collapse navbar-collapse" id="navbarsExample04">
-              <!-- <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Link</a>
-                </li>  
-              </ul>              -->
-              <div class="form-inline my-2 my-md-0 mx-auto">
-                 <div class="authentication">
-                   <div class='content'>
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="true">Login </a> 
-                        </li>
-                        <li class="nav-item" role="presentation">
-                          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
-                        </li> 
-                      </ul>
-                      <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active form_tab" id="login" role="tabpanel" aria-labelledby="login-tab">
-                       
-                        <div class="form-group">   
-                        <form method="POST" action="{{ url('/admin/login') }}" class="form-group" >
-                        @csrf              
-                                
-                                <input id="email"
-                                               type="text"
-                                               class="form-control{{ $errors->has('username') ||
-                                               $errors->has('email') ? ' is-invalid' : '' }}"
-                                               placeholder="Username or email"
-                                               aria-describedby="emailHelp"
-                                               name="login" value="{{ old('username') ?: old('email')
-                                                }}" required autofocus>
-                                        @if ($errors->has('username') || $errors->has('email'))
-                                            <span class="invalid-feedback">
-                                    <strong>{{ $errors->first('username') ?:
-                                    $errors->first('email') }}</strong>
-                                            </span>
-                                        @endif
-
-
-                              </div>
-                              <div class="form-group">                               
-                                
-                                <input id="exampleInputPassword1"
-                                           type="password"
-                                           class="form-control @error('password') is-invalid
-                                               @enderror"
-                                           name="password"
-                                           required
-                                           autocomplete="current-password"
-                                           placeholder="Password">
-                              </div>
-                              <input type="hidden" name="from" value="st">
-                            <button type="submit" class="mt-2 btn btn-primary">Login</button>
-                            </form>
-                        </div>
                     
-                        <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
-                            <div class="tab-pane fade show active form_tab" id="login" role="tabpanel" aria-labelledby="login-tab">
-                                <div class="form-group">                              
-                                    <input type="email" placeholder="Email" class="form-control" id="email" aria-describedby="emailHelp"> 
-                                  </div>
-                                  <div class="form-group">                               
-                                    <input type="password" placeholder="password" class="form-control" id="exampleInputPassword1">
-                                  </div>
-                                  <button type="submit" class="ml-2 mt-2 btn btn-primary">register</button>
-                            </div>
-                        </div> 
-                      </div>
-                   </div>
-                   <div class="social-login ml-2">
-                       <button class="btn btn-primary">login with Facebook</button>
-                   </div>
-                 </div>
-              </div>
-              <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                  <a class="nav-link" href="#">{{$quiz->quiz}} </a>
-                </li> 
-              </ul>  
+                </div>
             </div>
-          </nav>
-    </div>
-    <div class="container"> 
-    @if($errors->any())
-                <div  class="alert alert-warning"><h5 style="color:#000000;font-family: Aparajita">{{$errors->first()}}</h5></div>
+            <div>
+                <ul>
+                    {{--<li><a href="/how-it-works">How it works</a></li>--}}
+                    <li>
+                        <i class="fa fa-user"></i>
+                        <a href="{{url('/quiz-user-details/my-information')}}">{{auth()->user()->username}}</a>
+                    </li>
+                    
+                    <li>You have {{auth()->user()->credit_balance}} coins</li>
+                  
+                </ul>
+            </div>
+            @if(auth()->user())
+                <div>
+                    <a class="btn btn-outline-primary" href="{{ url('admin/logout') }}"
+                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                          style="display: none;">
+                        @csrf
+                    </form>
+                </div>
             @endif
-        <div class="row bg-white">  
-                   
+        </div>
+    </div>
+</section>
+          
+    <div class="container"> 
+        <div class="row bg-white">           
             <div class="col-md-2 p-3 text-center">
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLHD1iuGCfQ6y-_XWhK6O4E5vQPxpbFFmOBg&usqp=CAU"
                     class="img-fluid mb-2 img-thumbnail" alt="">
@@ -120,7 +63,6 @@
                     class="img-fluid mb-2 img-thumbnail" alt="">
                 <img class="img-fluid mb-2 img-thumbnail" src="https://static.vecteezy.com/system/resources/previews/000/580/906/non_2x/vector-creative-advertisement-banner-design.jpg" alt="">
             </div>
-            
             <div class="col-md-8 border-left border-right">   
                          
                     <div class="row  border-bottom p-3 shadow-lg" style="background-color: #f2f2f2;">

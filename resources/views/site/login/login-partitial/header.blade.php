@@ -15,14 +15,7 @@
                         <i class="fa fa-user"></i>
                         <a href="{{url('/quiz-user-details/my-information')}}">{{auth()->user()->username}}</a>
                     </li>
-                    <li>
-                        <a href="{{url('/view-cart')}}" title="view shopping cart" class="shoppingCart">
-                            <i class="fa fa-cart-plus text-warning" style="font-size: 34px">
-
-                            </i>
-                            <div class="counter">{{Cart::content()->count()}}</div>
-                        </a>
-                    </li>
+                    
                     <li>You have {{auth()->user()->credit_balance}} coins</li>
                     <li>
                         <a href="{{url('/credit-product')}}" class="btn btn-warning text-dark text-capitalize">top up coins</a>

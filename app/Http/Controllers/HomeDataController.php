@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Auction;
-use App\Product;
+
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,22 +23,7 @@ class HomeDataController extends Controller
         if (request()->input('ref')) {
             Session::put('ref', request()->input('ref'));
         }
-        $auctionList = Auction::with('product.category', 'medias', 'slots', 'bids.user')
-            ->whereStatus('Active')
-            ->whereIsClosed(0)
-            ->where('up_time', '<=', Carbon::now()->format('Y-m-d H:i:s'))
-            ->latest()->get();
-
-        $productList = Product::with('category', 'medias')
-            ->whereStatus(1)->where('quantity', '>', 0)->latest()->take(15)->get();
-        $closedAuctions = Auction::with('product.category', 'medias', 'bids.user')
-            ->whereIsClosed(1)->latest()->take(10)->get();
-
-        $upCommingAuction = Auction::with('product.category', 'medias')
-            ->whereStatus('Active')
-            ->whereIsClosed(0)
-            ->where('up_time', '>', Carbon::now()->format('Y-m-d H:i:s'))
-            ->latest()->get();
+        
 
 //        $quiz=DB::table('quizzes')
 //            ->select('*')
@@ -66,10 +51,10 @@ class HomeDataController extends Controller
 //        }
 
         return view('site.pages.home', [
-            'auctionList' => $auctionList,
-            'productList' => $productList,
-            'closedAuctions' => $closedAuctions,
-            'upCommingAuction' => $upCommingAuction,
+            'auctionList' => 0,
+            'productList' => 0,
+            'closedAuctions' => 0,
+            'upCommingAuction' =>0,
 //            'quiz'=>$quiz,
 //            'question'=>$question,
 
@@ -78,98 +63,116 @@ class HomeDataController extends Controller
 
     public function land()
     {
+        $quiz=DB::table('quizzes')
+           ->select('*')
+           ->where('status',1)
+           ->where('expiry_date','>=',date("Y/m/d"))
+           ->where('quiz_type','Commercial')
+           ->first();
 
-        return view('site.pages.landing');
+         
+       if(sizeof($quiz)>0)
+       {
+
+           $question = DB::table('questions')
+               ->select('*')
+               ->where('quiz_id', $quiz->id)
+               ->get();
+
+            $commercialQuiz=DB::table('quizzes')
+            ->select('*')
+            ->where('quiz_type', 'Commercial')
+            ->where('id','!=',$quiz->id)
+            ->get();
+            
+            $freeQuiz=DB::table('quizzes')
+            ->select('*')
+            ->where('quiz_type', 'Free')
+            ->get();
+            
+            $countAttend=DB::table('quiz_takens')
+            ->select('id')
+            ->where('quiz_id', $quiz->id)
+            ->count();
+
+            return view('site.pages.landing', ['quiz' => $quiz, 'question' => $question,'commercialQuiz'=>$commercialQuiz,'freeQuiz'=>$freeQuiz,'countAttend'=>$countAttend]);
+
+       }
+       else {
+
+           $message="No quiz available";
+           return view('site.pages.landing', ['msg' => $message]);
+
+       }
+
+       
     }
 
-    public function quizland()
+    public function findQuiz($id)
     {
-        if(auth()->user())
-        {
-            return redirect('/quiz-home');
-        }
 
-        $quiz = DB::table('quizzes')
-            ->select('*')
-            ->where('quiz_type', '=', 'First')
-            ->where('status', 1)
-            ->get();
+        $quiz=DB::table('quizzes')
+        ->select('*')
+        ->where('id',$id)
+        ->first();
 
-        $quizheads = DB::table('quizheads')
-            ->select('*')
-            ->get();
-
-        $prize = Prize::all();
-
-        if (sizeof($quiz) > 0) {
-
-            $question = DB::table('questions')
-                ->select('*')
-                ->where('quiz_id', $quiz[0]->id)
-                ->get();
-
-
-//            return view('site.pages.quizTest', ['quiz' => $quiz, 'question' => $question]);
-
-        } else {
-
-            $message = "No quiz available";
-            return view('galaxy.quizInd', ['msg' => $message]);
-
-        }
-        return view('galaxy.quizInd', [
-
-            'quiz' => $quiz,
-            'question' => $question,
-            'quizhead' => $quizheads,
-            'prize' => $prize,
-        ]);
-
-
-    }
-
-
-
-    public function next()
+      
+    if(sizeof($quiz)>0)
     {
-        $next=DB::table('quizzes')
-        ->select('*')
-        ->where('quiz_type','=','Next')
-        ->where('status',1)
-        ->get();
-
-        $quizheads=DB::table('quizheads')
-        ->select('*')
-        ->get();
-
-        $prize=Prize::all();
-
-        if(sizeof($next)>0)
-        {
 
         $question = DB::table('questions')
-        ->select('*')
-        ->where('quiz_id', $next[0]->id)
-        ->get();
+            ->select('*')
+            ->where('quiz_id', $quiz->id)
+            ->get();
 
+        if($quiz->quiz_type == 'Commercial')
+            {
+       
+        $commercialQuiz=DB::table('quizzes')
+         ->select('*')
+         ->where('quiz_type', 'Commercial')
+         ->where('expiry_date','>=',date("Y/m/d"))
+         ->where('id','!=',$id)
+         ->get();
+         $freeQuiz=DB::table('quizzes')
+         ->select('*')
+         ->where('quiz_type', 'Free')
+         ->where('expiry_date','>=',date("Y/m/d"))
+         ->get();
+            }
+            else{
 
-        //            return view('site.pages.quizTest', ['quiz' => $quiz, 'question' => $question]);
+                $commercialQuiz=DB::table('quizzes')
+                ->select('*')
+                ->where('quiz_type', 'Commercial')
+                ->where('expiry_date','>=',date("Y/m/d"))
+                ->get(); 
 
-        }
-        else {
+                $freeQuiz=DB::table('quizzes')
+                ->select('*')
+                ->where('quiz_type', 'Free')
+                ->where('expiry_date','>=',date("Y/m/d"))
+                ->where('id','!=',$id)
+                ->get();
+                    
+            }
+         
+         
+         
+        $countAttend=DB::table('quiz_takens')
+         ->select('id')
+         ->where('quiz_id', $quiz->id)
+         ->count();
 
-            $message="No quiz available";
-            return view('galaxy.next', ['msg' => $message]);
+         return view('site.pages.landing', ['quiz' => $quiz, 'question' => $question,'commercialQuiz'=>$commercialQuiz,'freeQuiz'=>$freeQuiz,'countAttend'=>$countAttend]);
 
-        }
-        return view('galaxy.next',[
+    }
+    else {
 
-            'quiz'=>$next,
-            'question'=>$question,
-            'quizhead'=>$quizheads,
-            'prize'=>$prize,
-        ]);
+        $message="No quiz available";
+        return view('site.pages.landing', ['msg' => $message]);
 
+    }
     }
 
 }

@@ -37,18 +37,6 @@ class QuizController extends Controller
         $expiry_date = $request->input('expiry_date');
         $admin_id = $user;
 
-        $table = DB::table('quizzes')
-            ->select('id')
-            ->where('quiz_type', $type )
-            ->where('status', 1)
-            ->get();
-
-        if (sizeof($table)>0)  {
-
-            quiz::where('id', $table[0]->id)->update([
-                'status' => 0
-            ]);
-
             $validatedData = $request->validate([
                 'quiz' => 'required|string',
                 'quiz_type' => 'required|string',
@@ -64,7 +52,7 @@ class QuizController extends Controller
                 'status' => $status,
 
                 'expiry_date' => $expiry_date,
-                'admin_id' => $admin_id,
+                
 
             ]);
             $quizid = DB::table('quizzes')
@@ -77,42 +65,7 @@ class QuizController extends Controller
 
             return redirect()->route('question.create', ['quiz' => $quizid[0]->id]);
 
-        } else {
-            $validatedData = $request->validate([
-                'quiz' => 'required|string',
-                'expiry_date' => 'required|date'
-            ]);
-//            $quiz = $request->input('quiz');
-//            $status = 1;
-//
-//            $expiry_date = $request->input('expiry_date');
-//
-//            $admin_id = $user;
-//            $quiz_type=$type;
-//            $data = array('quiz' => $quiz, 'quiz_type'=> $quiz_type, 'status' => $status, 'expiry_date' => $expiry_date, 'admin_id' => $admin_id);
-//            DB::table('quizzes')->insert($data);
-
-            $quiz = quiz::create([
-
-                'quiz' => $quiz,
-                'quiz_type'=> $type,
-                'status' => $status,
-
-                'expiry_date' => $expiry_date,
-                'admin_id' => $admin_id,
-
-            ]);
-
-
-            $quizid = DB::table('quizzes')
-                ->select('id')
-                ->where('quiz_type', $type )
-                ->where('status', 1)
-                ->first();
-
-
-            return redirect()->route('question.create', ['quiz' => $quizid[0]->id]);
-        }
+       
     }
     /**
      * Store a newly created resource in storage.

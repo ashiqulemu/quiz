@@ -2,10 +2,11 @@
     <div class="container">
         <div class="header">
             <div>
-                <div class="brand">
+            <div class="brand">
                     <a href="#">
-                        <img src="/images/logo.png" class="img-fluid d-block">
-                    </a>
+                    <img width='120px' src="https://img.freepik.com/free-vector/quiz-comic-pop-art-style_175838-505.jpg?size=626&ext=jpg" alt="">
+            </a>
+                    
                 </div>
             </div>
             <div>
@@ -24,9 +25,7 @@
                         {{--</a>--}}
                     {{--</li>--}}
                     <li>You have {{auth()->user()->credit_balance}} coins</li>
-                    <li>
-                        <a href="{{url('/credit-product')}}" class="btn btn-warning text-dark text-capitalize">top up coins</a>
-                    </li>
+                    
                 </ul>
             </div>
             @if(auth()->user())

@@ -86,7 +86,7 @@ class LoginController extends Controller
 
 
         }else if($user->role === 'user' && $request->input('from') == 'st'){
-            Cart::merge(auth()->user()->id);
+           
             return redirect('/user-home');
 
         }else if($user->role === 'user' && $request->input('from') == 'quiz') {

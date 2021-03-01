@@ -372,7 +372,7 @@ class QuizTestController extends Controller
 //            Auth::loginUsingId($authUser->id);
 
         else {
-            return redirect('/quiz-login')->withErrors(['You are already registered. Please login']);
+            return redirect()->back()->withErrors(['You are already registered. Please login']);
         }
 
 
@@ -380,10 +380,14 @@ class QuizTestController extends Controller
 
     public function registeredQuiz(Request $request)
     {
-
-        $userid = auth()->user()->id;
-        $quizid = $request->quiz_id;
+        if(auth()->user())
+        {   
+       
+        $userid=3;
+       
+        $quizid = $request->quiz;
         $questionid = $request->questions;
+        
         $check = DB::table('answers')
             ->join('questions', 'answers.question_id', '=', 'questions.id')
             ->join('quizzes', 'quizzes.id', '=', 'questions.quiz_id')
@@ -408,6 +412,9 @@ class QuizTestController extends Controller
 
             return redirect('/info-home')->withErrors(['You have already taken the quiz', 'You have already taken the quiz']);
         }
+    }else{
+        return redirect()->back()->withErrors(['You are not logged in. Please login or register']);
+    }
 
 
     }
